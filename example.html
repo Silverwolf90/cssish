@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <title>cssish example</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div id="container" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.2.0/react-dom.js"></script>
+    <script src="dist/bundle.js"></script>
+    <script type="text/babel">
+      const className = cssish`
+        & { // represents the root element, it gets replaced with a  unique class name
+          display: block;
+          width: 50%;
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+
+        & > li {
+          background-color: red;
+        }
+
+        @media screen and (min-width: 768px) {
+          & {
+            width: 100%;
+          }
+
+          & > li {
+            background-color: green;
+          }
+        }
+      `;
+
+      const ListComponent = () => (
+        <ul className={className}>
+          <li>Item 1</li>
+          <li>Item 2</li>
+        </ul>
+      );
+
+      ReactDOM.render(
+        <ListComponent />,
+        document.getElementById('container')
+      );
+
+      // Render the stylehshseet
+      const pre = document.createElement('pre');
+      pre.setAttribute('class', className);
+      document.body.appendChild(pre);
+
+      setTimeout(() => {
+        pre.innerHTML = Array
+          .from(cssish.cxs.sheet.rules)
+          .map(rule => rule.cssText)
+          .join('\n\n');
+      }, 1000)
+    </script>
+  </body>
+</html>
